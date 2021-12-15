@@ -6160,11 +6160,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\dawid\\RiderProjects\\DataWarehouse\\DataWarehouse\\DataWarehouse.csproj",
+      "projectUniqueName": "C:\\Users\\dawid\\OneDrive\\Pulpit\\Studia\\dw2\\DataWarehouse\\DataWarehouse.csproj",
       "projectName": "DataWarehouse",
-      "projectPath": "C:\\Users\\dawid\\RiderProjects\\DataWarehouse\\DataWarehouse\\DataWarehouse.csproj",
+      "projectPath": "C:\\Users\\dawid\\OneDrive\\Pulpit\\Studia\\dw2\\DataWarehouse\\DataWarehouse.csproj",
       "packagesPath": "C:\\Users\\dawid\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\dawid\\RiderProjects\\DataWarehouse\\DataWarehouse\\obj\\",
+      "outputPath": "C:\\Users\\dawid\\OneDrive\\Pulpit\\Studia\\dw2\\DataWarehouse\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

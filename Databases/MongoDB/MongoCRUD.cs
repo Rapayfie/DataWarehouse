@@ -17,7 +17,14 @@ namespace DataWarehouse.Databases.MongoDB
 
         public static void CreatePatients()
         {
-            PatientRepository.InsertMany(DataGenerator.GeneratePatients(5));
+            DiseaseHospitalHistoryRepository.InsertMany(DataGenerator.GenerateDiseaseHistory(5));
+        }
+
+        public static void Dispose()
+        {
+            PatientRepository.DeleteAll();
+            DiseaseRepository.DeleteAll();
+            DiseaseHospitalHistoryRepository.DeleteAll();
         }
     }
 }

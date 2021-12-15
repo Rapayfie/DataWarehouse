@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "QZQKXU1o+slqApgbAzYaNu7qwNmcJOoLdNEvCL2fvJApGgHAGCX1z3MRV5KyFL+sxdV44Ay0Ug/OfEhxn8jQhA==",
+  "dgSpecHash": "hofiGexaOb/KX3hIv3qRVXip+usXzhk+cPEPwyIc6u18K+OTlqStSI0emLgzVHvFxvyQxAmD0Zdb4LtahMoA4w==",
   "success": true,
-  "projectFilePath": "C:\\Users\\dawid\\RiderProjects\\DataWarehouse\\DataWarehouse\\DataWarehouse.csproj",
+  "projectFilePath": "C:\\Users\\dawid\\OneDrive\\Pulpit\\Studia\\dw2\\DataWarehouse\\DataWarehouse.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\dawid\\.nuget\\packages\\dnsclient\\1.4.0\\dnsclient.1.4.0.nupkg.sha512",
     "C:\\Users\\dawid\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",

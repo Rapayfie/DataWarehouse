@@ -25,6 +25,7 @@ namespace DataWarehouse
             {
                 result.Add(new DiseaseHospitalHistory()
                 {
+                    Id = Guid.NewGuid(),
                     HospitalName = $"{RandomString()} {RandomString()}",
                     StayFrom = RandomDate(),
                     StayTo = RandomDate(),
@@ -43,6 +44,7 @@ namespace DataWarehouse
             {
                 result.Add(new Disease()
                 {
+                    Id = Guid.NewGuid(),
                     Name = $"{RandomString()} {RandomString()}",
                     StartDate = RandomDate(),
                     EndDate = RandomEndDate(),
@@ -61,6 +63,7 @@ namespace DataWarehouse
             {
                 result.Add(new Patient
                 {
+                    Id = Guid.NewGuid(),
                     FirstName = $"{RandomString()} {RandomString()}",
                     LastName = $"{RandomString()} {RandomString()}",
                     Address = $"{RandomString()} {Gen.Next(0, 500)}",

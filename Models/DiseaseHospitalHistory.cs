@@ -4,7 +4,7 @@ namespace DataWarehouse.Models
 {
     public class DiseaseHospitalHistory
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string HospitalName { get; set; }
         public DateTime StayFrom { get; set; }
         public DateTime StayTo { get; set; }

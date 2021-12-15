@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;  
-using System;  
 using System.Collections.Generic;  
 using System.Linq;
 
@@ -52,6 +51,12 @@ namespace DataWarehouse.Databases.MSSQL
             _dbSet.Remove(entityToDelete);
         }
 
+        public void DeleteAll()
+        {
+            var rows = _dbSet.Select(row => row);
+            _dbSet.RemoveRange(rows);
+        }
+        
         public void Update(TEntity entityToUpdate)
         {
             _dbSet.Attach(entityToUpdate);

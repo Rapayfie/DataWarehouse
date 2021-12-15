@@ -4,9 +4,9 @@ using DataWarehouse.Databases.MSSQL;
 
 namespace DataWarehouse
 {
-    public static class OperationsBenchmark
+    public static class InsertOperationsBenchmarkFactory
     {
-        static OperationsBenchmark()
+        static InsertOperationsBenchmarkFactory()
         {
             
         }
@@ -20,7 +20,7 @@ namespace DataWarehouse
             watch.Stop();
             
             Console.WriteLine($"Finished BencharkInsertMSSQLOperation operation. Elapsed time: " +
-                              $"{watch.ElapsedMilliseconds}");
+                              $"{watch.ElapsedMilliseconds} ms");
         }
 
         public static void BenchmarkInsertMongoOperation()
@@ -32,7 +32,7 @@ namespace DataWarehouse
             watch.Stop();
             
             Console.WriteLine($"Finished BenchmarkInsertMongoOperation operation. Elapsed time: " +
-                              $"{watch.ElapsedMilliseconds}");
+                              $"{watch.ElapsedMilliseconds} ms");
         }
     }
 }

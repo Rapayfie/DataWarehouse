@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Storage;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -63,6 +62,14 @@ namespace DataWarehouse.Databases.MongoDB
             var filter = Builders<TEntity>.Filter.Eq("Id", id);
 
             collection.DeleteOne(filter);
+        }
+
+        public void DeleteAll()
+        {
+            var collection = _db.GetCollection<TEntity>(_table);
+            var filter = Builders<TEntity>.Filter.Empty;
+            
+            collection.DeleteMany(filter);
         }
     }
 }

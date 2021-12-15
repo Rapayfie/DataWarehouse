@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataWarehouse.Migrations
 {
     [DbContext(typeof(DiseasesContext))]
-    [Migration("20211122203311_MyFirstMigration")]
-    partial class MyFirstMigration
+    [Migration("20211215175355_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,10 +23,9 @@ namespace DataWarehouse.Migrations
 
             modelBuilder.Entity("DataWarehouse.Models.Disease", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
@@ -34,8 +33,8 @@ namespace DataWarehouse.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PatientId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("PatientId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
@@ -49,16 +48,15 @@ namespace DataWarehouse.Migrations
 
             modelBuilder.Entity("DataWarehouse.Models.DiseaseHospitalHistory", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("DiseaseId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("DiseaseId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("HospitalName")
                         .HasColumnType("nvarchar(max)");
@@ -78,10 +76,9 @@ namespace DataWarehouse.Migrations
 
             modelBuilder.Entity("DataWarehouse.Models.Patient", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");

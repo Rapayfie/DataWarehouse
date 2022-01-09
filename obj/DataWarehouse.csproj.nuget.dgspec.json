@@ -1,31 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\dawid\\OneDrive\\Pulpit\\Studia\\dw2\\DataWarehouse\\DataWarehouse.csproj": {}
+    "C:\\Users\\Dawid\\Git\\DataWarehouse\\DataWarehouse.csproj": {}
   },
   "projects": {
-    "C:\\Users\\dawid\\OneDrive\\Pulpit\\Studia\\dw2\\DataWarehouse\\DataWarehouse.csproj": {
+    "C:\\Users\\Dawid\\Git\\DataWarehouse\\DataWarehouse.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\dawid\\OneDrive\\Pulpit\\Studia\\dw2\\DataWarehouse\\DataWarehouse.csproj",
+        "projectUniqueName": "C:\\Users\\Dawid\\Git\\DataWarehouse\\DataWarehouse.csproj",
         "projectName": "DataWarehouse",
-        "projectPath": "C:\\Users\\dawid\\OneDrive\\Pulpit\\Studia\\dw2\\DataWarehouse\\DataWarehouse.csproj",
-        "packagesPath": "C:\\Users\\dawid\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\dawid\\OneDrive\\Pulpit\\Studia\\dw2\\DataWarehouse\\obj\\",
+        "projectPath": "C:\\Users\\Dawid\\Git\\DataWarehouse\\DataWarehouse.csproj",
+        "packagesPath": "C:\\Users\\Dawid\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Dawid\\Git\\DataWarehouse\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\dawid\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\Dawid\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -57,6 +51,10 @@
             "MongoDB.Driver": {
               "target": "Package",
               "version": "[2.13.2, )"
+            },
+            "System.Management": {
+              "target": "Package",
+              "version": "[6.0.0, )"
             }
           },
           "imports": [
@@ -69,12 +67,30 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[5.0.0, 5.0.0]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[5.0.13, 5.0.13]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[5.0.0, 5.0.0]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[5.0.0, 5.0.0]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     }

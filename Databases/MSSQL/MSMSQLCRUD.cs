@@ -1,4 +1,6 @@
-﻿using DataWarehouse.Models;
+﻿using System.Threading;
+using DataWarehouse.Commons.Generators;
+using DataWarehouse.Models;
 
 namespace DataWarehouse.Databases.MSSQL
 {
@@ -15,12 +17,12 @@ namespace DataWarehouse.Databases.MSSQL
             DiseaseHospitalHistoryRepository = new Repository<DiseaseHospitalHistory>();
         }
 
-        public static void CreatePatients()
+        public static void CreatePatients(int count, bool includeChildElements = false)
         {
-            DiseaseHospitalHistoryRepository.InsertMany(DataGenerator.GenerateDiseaseHistory(5));
+            PatientRepository.InsertMany(DataGenerator.GeneratePatients(5, includeChildElements));
         }
 
-        public static void Dispose()
+        public static void DeleteAllRecords()
         {
             PatientRepository.DeleteAll();
             DiseaseRepository.DeleteAll();

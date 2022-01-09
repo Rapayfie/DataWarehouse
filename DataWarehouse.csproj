@@ -12,6 +12,11 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
       <PackageReference Include="MongoDB.Driver" Version="2.13.2" />
+      <PackageReference Include="System.Management" Version="6.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Commons\Extensions" />
     </ItemGroup>
 
 </Project>

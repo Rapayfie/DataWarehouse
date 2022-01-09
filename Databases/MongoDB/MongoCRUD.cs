@@ -1,4 +1,5 @@
-﻿using DataWarehouse.Models;
+﻿using DataWarehouse.Commons.Generators;
+using DataWarehouse.Models;
 
 namespace DataWarehouse.Databases.MongoDB
 {
@@ -15,12 +16,21 @@ namespace DataWarehouse.Databases.MongoDB
             DiseaseHospitalHistoryRepository = new Repository<DiseaseHospitalHistory>("DiseaseHospitalHistories");
         }
 
-        public static void CreatePatients()
+        public static void CreatePatients(int count, bool includeChildElements = false)
         {
-            DiseaseHospitalHistoryRepository.InsertMany(DataGenerator.GenerateDiseaseHistory(5));
+            PatientRepository.InsertMany(
+                DataGenerator.GeneratePatients(count, includeChildElements));
         }
-
-        public static void Dispose()
+        
+        /*
+        public static void SelectPatients()
+        {
+            PatientRepository.Query()
+                DataGenerator.GeneratePatients(count, includeChildElements));
+        }
+        */
+        
+        public static void DeleteAllRecords()
         {
             PatientRepository.DeleteAll();
             DiseaseRepository.DeleteAll();

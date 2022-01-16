@@ -30,7 +30,7 @@ namespace DataWarehouse.Databases.MSSQL
         
         public static void SelectAllPatients_WithDependencies_WhereDiseaseStartsWith_A_letter_OrderByPatientAddress()
         {
-            var a2 = PatientRepository.Query(
+            var queryResult = PatientRepository.Query(
                 filter:
                 x => 
                     x.Diseases.Any(y => y.Name.StartsWith("a")),

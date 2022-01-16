@@ -31,7 +31,7 @@ namespace DataWarehouse.Databases.MongoDB
         
         public static void SelectPatients()
         {
-            var a2 = PatientRepository.Query(
+            var queryResult = PatientRepository.Query(
                 filter:
                 x => 
                     x.Diseases.Any(y => y.Name.StartsWith("a")),

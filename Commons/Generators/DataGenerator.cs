@@ -7,18 +7,24 @@ namespace DataWarehouse.Commons.Generators
 {
     public static class DataGenerator
     {
+        #region Fields
         private static readonly Random Gen;
         private static readonly DateTime StartDate;
         private static readonly int DateRange;
-        
+        #endregion
+
+        #region Constructor
         static DataGenerator()
         {
             Gen = new Random();
             StartDate = new DateTime(1995, 1, 1);
             DateRange = (DateTime.Today - StartDate).Days;
         }
-        
-        public static IEnumerable<DiseaseHospitalHistory> GenerateDiseaseHistory(int count)
+        #endregion
+
+        #region Implementation
+
+        private static IEnumerable<DiseaseHospitalHistory> GenerateDiseaseHistory(int count)
         {
             var result = new List<DiseaseHospitalHistory>();
             for (int i = 0; i < count; i++)
@@ -35,10 +41,9 @@ namespace DataWarehouse.Commons.Generators
 
             return result;
         }
-        
-        public static IEnumerable<Disease> GenerateDisease(int count)
+
+        private static IEnumerable<Disease> GenerateDisease(int count)
         {
-            int diseaseHistoryCount = 5;
             var result = new List<Disease>();
             for (int i = 0; i < count; i++)
             {
@@ -48,7 +53,7 @@ namespace DataWarehouse.Commons.Generators
                     Name = $"{RandomString()} {RandomString()}",
                     StartDate = RandomDate(),
                     EndDate = RandomEndDate(),
-                    DiseaseHospitalHistory = GenerateDiseaseHistory(diseaseHistoryCount)
+                    DiseaseHospitalHistory = GenerateDiseaseHistory(count)
                 });
             }
 
@@ -57,7 +62,6 @@ namespace DataWarehouse.Commons.Generators
         
         public static IEnumerable<Patient> GeneratePatients(int count, bool includeChildElements = true)
         {
-            int diseaseCount = 5;
             var result = new List<Patient>();
             for (int i = 0; i < count; i++)
             {
@@ -68,19 +72,19 @@ namespace DataWarehouse.Commons.Generators
                     LastName = $"{RandomString()} {RandomString()}",
                     Address = $"{RandomString()} {Gen.Next(0, 500)}",
                     Age = Gen.Next(0, 100),
-                    Diseases = includeChildElements ? GenerateDisease(diseaseCount) : null
+                    Diseases = includeChildElements ? GenerateDisease(count) : null
                 });
             }
 
             return result;
         }
-        
-        public static DateTime RandomDate()
+
+        private static DateTime RandomDate()
         {
             return StartDate.AddDays(Gen.Next(DateRange));
         }
-        
-        public static string RandomString()
+
+        private static string RandomString()
         {
             var oneWordLength = 6;
             const string pool = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -90,7 +94,7 @@ namespace DataWarehouse.Commons.Generators
             return new string(chars.ToArray());
         }
 
-        public static DateTime? RandomEndDate()
+        private static DateTime? RandomEndDate()
         {
             var rand = Gen.Next(0, 100);
             if (rand % 2 == 0 && rand is > 30 and < 80)
@@ -100,5 +104,7 @@ namespace DataWarehouse.Commons.Generators
 
             return RandomDate();
         }
+        #endregion
+        
     }
 }

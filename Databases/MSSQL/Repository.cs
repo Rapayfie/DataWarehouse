@@ -1,66 +1,63 @@
-﻿using Microsoft.EntityFrameworkCore;  
+﻿using System;
+using Microsoft.EntityFrameworkCore;  
 using System.Collections.Generic;  
 using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace DataWarehouse.Databases.MSSQL
 {
     public class Repository<TEntity> where TEntity : class
     {
+        #region Fields
         private readonly DiseasesContext _context;
         private readonly DbSet<TEntity> _dbSet;
+        #endregion
 
+        #region Constructor
         public Repository()
         {
-            this._context = new DiseasesContext();
-            this._dbSet = _context.Set<TEntity>();
+            _context = new DiseasesContext();
+            _dbSet = _context.Set<TEntity>();
         }
+        #endregion
 
-        public IEnumerable<TEntity> GetAll()
-        {
-            return _dbSet.ToList();
-        }
-
-        public TEntity GetByID(object id)
-        {
-            return _dbSet.Find(id);
-        }
-
-        public void Insert(TEntity entity)
-        {
-            _dbSet.Add(entity);
-        }
-
+        #region Implementation
         public void InsertMany(IEnumerable<TEntity> entities)
         {
             _dbSet.AddRange(entities);
             _context.SaveChanges();
         }
         
-        public void Delete(object id)
-        {
-            TEntity entityToDelete = _dbSet.Find(id);
-            Delete(entityToDelete);
-        }
-
-        public void Delete(TEntity entityToDelete)
-        {
-            if (_context.Entry(entityToDelete).State == EntityState.Detached)
-            {
-                _dbSet.Attach(entityToDelete);
-            }
-            _dbSet.Remove(entityToDelete);
-        }
-
         public void DeleteAll()
         {
             var rows = _dbSet.Select(row => row);
             _dbSet.RemoveRange(rows);
+            _context.SaveChanges();
         }
         
-        public void Update(TEntity entityToUpdate)
+        public ValueTask<IQueryable<TEntity>> Query(
+            Expression<Func<TEntity, bool>> filter = null,
+            int skip = 0,
+            int take = int.MaxValue,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null)
         {
-            _dbSet.Attach(entityToUpdate);
-            _context.Entry(entityToUpdate).State = EntityState.Modified;
+            var resetSet = filter != null ? 
+                _dbSet.AsNoTracking().Where(filter).AsQueryable() : _dbSet.AsNoTracking().AsQueryable();
+
+            if (include != null)
+            {
+                resetSet = include(resetSet);
+            }
+            if (orderBy != null)
+            {
+                resetSet = orderBy(resetSet).AsQueryable();
+            }
+            resetSet = skip == 0 ? resetSet.Take(take) : resetSet.Skip(skip).Take(take);
+            return new ValueTask<IQueryable<TEntity>>(resetSet);
         }
+        #endregion
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DataWarehouse.Models
 {
-    public class Patient
+    public record Patient
     {
         public Guid Id { get; set; }
         public string FirstName { get; set; }

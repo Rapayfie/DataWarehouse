@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using DataWarehouse.Commons.Attributes;
 using DataWarehouse.Commons.Generators;
 
@@ -8,31 +9,33 @@ namespace DataWarehouse.Benchmarks
 {
     public static class BenchmarkRunner
     {
-        private static readonly BenchmarkOutputGenerator BenchmarkOutputGenerator;
-
-        static BenchmarkRunner()
-        {
-            BenchmarkOutputGenerator = BenchmarkOutputGenerator.GetInstance();
-        }
-        
-        public static async void Run<T>() where T : class
+        #region Implementation
+        public static async Task Run<T>() where T : Benchmark
         {
             await BenchmarkOutputGenerator.WritePreprocessingInformation();
-
-            var methodInfos = GetAllMethodsWithBenchmarkAttribute(typeof(T));
-
-            foreach (var method in methodInfos)
+            var methodInfos = GetMethods(typeof(T));
+            object classInstance = Activator.CreateInstance(typeof(T), null);
+            StringBuilder stringBuilder = new StringBuilder();
+            
+            foreach (var methodInfo in methodInfos)
             {
-                //method.Invoke()
+                var attribute = methodInfo.GetCustomAttribute<BenchmarkAttribute>();
+                stringBuilder.AppendLine(attribute.Description);
+                stringBuilder.AppendLine(attribute.SqlEquivalentStatement);
+                
+                //BEGIN RUNNING TIME CALCULATIONS
+                var watch = System.Diagnostics.Stopwatch.StartNew();
+                methodInfo.Invoke(classInstance, null);
+                watch.Stop();
+                stringBuilder.AppendLine($"Running time: {watch.ElapsedMilliseconds.ToString()}");
             }
+            await BenchmarkOutputGenerator.WriteInformation(stringBuilder.ToString());
         }
 
-        private static MethodInfo[] GetAllMethodsWithBenchmarkAttribute(Type type)
+        private static MethodInfo[] GetMethods(Type type)
         {
-            return type.Assembly.GetTypes()
-                .SelectMany(t => t.GetMethods())
-                .Where(m => m.GetCustomAttributes(typeof(BenchmarkAttribute), false).Length > 0)
-                .ToArray();
+            return type.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
         }
+        #endregion
     }
 }

@@ -3,51 +3,60 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Storage;
-using MongoDB.Bson;
+using Microsoft.EntityFrameworkCore.Query;
 using MongoDB.Driver;
 
 namespace DataWarehouse.Databases.MongoDB
 {
-    public class Repository<TEntity> where TEntity : class
+    public class Repository<TDocument> where TDocument : class
     {
-        private readonly IMongoDatabase _db;
-        private readonly string _database;
-        private readonly string _table;
-        private readonly MongoClient _client;
-        
+        #region Fields
+        private readonly IMongoCollection<TDocument> _collection;
+        #endregion
+
+        #region Constructor
         public Repository(string table)
         {
-            _table = table;
-            _database = "DiseaseDB";
-            _client = new MongoClient();
-            _db = _client.GetDatabase(_database);
+            var database = "DiseaseDB";
+            var client = new MongoClient();
+            var db = client.GetDatabase(database);
+            _collection = db.GetCollection<TDocument>(table);
         }
+        #endregion
 
-        public void InsertMany(IEnumerable<TEntity> records)
+        #region Implementation
+        public void InsertMany(IEnumerable<TDocument> records)
         {
-            var collection = _db.GetCollection<TEntity>(_table);
-            collection.InsertMany(records);
+            _collection.InsertMany(records);
         } 
 
         public void DeleteAll()
         {
-            var collection = _db.GetCollection<TEntity>(_table);
-            var filter = Builders<TEntity>.Filter.Empty;
-            
-            collection.DeleteMany(filter);
+            var filter = Builders<TDocument>.Filter.Empty;
+            _collection.DeleteMany(filter);
         }
 
-        public void DropDatabase()
+        public ValueTask<IQueryable<TDocument>> Query(
+            Expression<Func<TDocument, bool>> filter = null,
+            int skip = 0,
+            int take = int.MaxValue,
+            Func<IQueryable<TDocument>, IOrderedQueryable<TDocument>> orderBy = null,
+            Func<IQueryable<TDocument>, IIncludableQueryable<TDocument, object>> include = null)
         {
-            _client.DropDatabase(_database);
-        }
+            var resetSet = filter != null ? 
+                _collection.AsQueryable().Where(filter): _collection.AsQueryable();
 
-        public ValueTask<IQueryable<TEntity>> Query(Expression<Func<TEntity, bool>> predicate)
-        {
-            var collection = _db.GetCollection<TEntity>(_table);
-
-            return new ValueTask<IQueryable<TEntity>>(collection.AsQueryable().Where(predicate));
+            if (include != null)
+            {
+                resetSet = include(resetSet);
+            }
+            if (orderBy != null)
+            {
+                resetSet = orderBy(resetSet).AsQueryable();
+            }
+            resetSet = skip == 0 ? resetSet.Take(take) : resetSet.Skip(skip).Take(take).AsQueryable();
+            return new ValueTask<IQueryable<TDocument>>(resetSet);
         }
+        #endregion
     }
 }

@@ -2,7 +2,7 @@
 
 namespace DataWarehouse.Models
 {
-    public class DiseaseHospitalHistory
+    public record DiseaseHospitalHistory
     {
         public Guid Id { get; set; }
         public string HospitalName { get; set; }

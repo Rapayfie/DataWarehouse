@@ -1,84 +1,145 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Management;
+using System.Reflection;
+using System.Text;
 
 namespace DataWarehouse.Commons.Generators
 {
-    public sealed class BenchmarkOutputGenerator
+    public static class BenchmarkOutputGenerator
     {
-        private static BenchmarkOutputGenerator _instance;
-        private string _directoryName = "Benchmarks.Data";
-        private string _fileName;
-        private string _path;
-        
-        private BenchmarkOutputGenerator()
+        #region Fields
+        private const string DirectoryName = "Benchmarks.Data";
+        private static string _fileName;
+        private static string _path;
+        private static readonly Dictionary<string, List<string>> PcInfoDictionary;
+        #endregion
+
+        #region Constructor
+        static BenchmarkOutputGenerator()
         {
-            if (!Directory.Exists(_directoryName))
-                Directory.CreateDirectory(_directoryName);
+            if (!Directory.Exists(DirectoryName))
+                Directory.CreateDirectory(DirectoryName);
             
             CreateFileWithCurrentDate();
+            PcInfoDictionary = new Dictionary<string, List<string>>()
+            {
+                {"Processor", new List<string>(){"Name", "NumberOfLogicalProcessors"}},
+                {"DiskDrive", new List<string>(){"Model"}},
+                {"PhysicalMemory", new List<string>(){"Capacity", "Speed"}},
+            };
         }
+        #endregion
 
-        private void CreateFileWithCurrentDate()
+        #region Implementation
+        private static void CreateFileWithCurrentDate()
         {
             _fileName = $"Benchmark_{DateTime.Now:yyyyMMdd_hhmmss}";
-            _path = Path.Combine(_directoryName, _fileName);
-            File.Create(_path);
+            _path = System.IO.Path.Combine(DirectoryName, _fileName);
+            File.Create(_path).Close();
         }
-
-        public static BenchmarkOutputGenerator GetInstance() =>
-            _instance ??= new BenchmarkOutputGenerator();
         
-        public async Task WritePreprocessingInformation()
+        public static async Task WritePreprocessingInformation()
         {
             await WriteBeginningDialog();
             await WritePcSpecs();
             await WriteModelsInfo();
         }
 
-        private async Task WriteBeginningDialog()
+        public static async Task WriteInformation(string information)
+        {
+            await using StreamWriter sw = File.AppendText(_path);
+            await sw.WriteLineAsync(information);
+        }
+        
+        private static async Task WriteBeginningDialog()
         {
             string text = @"--> Beginning benchmarks of sql operations on databases...";
-            var a = DriveInfo.GetDrives();
             
-            await File.WriteAllTextAsync(_path, text);
+            await File.WriteAllLinesAsync(_path, text.Split('\n'));
         }
 
-        private async Task WritePcSpecs()
+        private static async Task WritePcSpecs()
         {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine();
+            stringBuilder.AppendLine("******Pc specs: ******");
             
-            string text = @"--> Beginning benchmarks of sql operations on databases...";
-            await File.WriteAllTextAsync(_path, text);
+            foreach(KeyValuePair<string, List<string>> entry in PcInfoDictionary)
+            {
+                foreach (var value in entry.Value)
+                {
+                    var componentValues = GetComponent(entry.Key, value);
+                    foreach (var component in componentValues)
+                    {
+                        stringBuilder.AppendLine($"{entry.Key.ToString()}  {value.ToString()}  {component}");
+                    }
+                }
+            }
+            stringBuilder.AppendLine();
+            using (StreamWriter sw = File.AppendText(_path))
+            {
+                await sw.WriteLineAsync(stringBuilder.ToString());
+            }
         }
 
-        private static void GetComponent(string hwclass, string syntax)
+        private static List<string> GetComponent(string hwclass, string syntax)
         {
+            var list = new List<string>();
+            
             ManagementObjectSearcher mos = 
-                new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM " + hwclass);
+                new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_" + hwclass);
             
             foreach (ManagementObject mj in mos.Get())
             {
                 if (Convert.ToString(mj[syntax]) != "")
-                    Console.WriteLine(Convert.ToString(mj[syntax]));
+                    list.Add(Convert.ToString(mj[syntax]));
+            }
+
+            return list;
+        }
+        
+        private static async Task WriteModelsInfo()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("******Models used for testing: ******");
+            var ns = "DataWarehouse.Models";
+            
+            var classesFromAssembly = Assembly.GetExecutingAssembly().GetTypes()
+                .Where(t => t.Namespace == ns)
+                .ToList();
+
+            foreach (var classFromAssembly in classesFromAssembly)
+            {
+                stringBuilder.AppendLine("Model: " + classFromAssembly.Name);
+                var properties = classFromAssembly.GetProperties();
+                foreach (var property in properties)
+                {
+                    stringBuilder.AppendLine(property.Name);
+                }
+
+                stringBuilder.AppendLine();
+            }
+            
+            using (StreamWriter sw = File.AppendText(_path))
+            {
+                await sw.WriteLineAsync(stringBuilder.ToString());
             }
         }
         
-        private async Task WriteModelsInfo()
-        {
-            await WritePcSpecs();
-        }
-        
-        public async Task WritePostprocessingInformation()
+        public static async Task WritePostprocessingInformation()
         {
             await WriteEndDialog();
         }
         
-        private async Task WriteEndDialog()
+        private static async Task WriteEndDialog()
         {
             string text = @"--> End of benchmarks of sql operations on databases...";
             await File.WriteAllTextAsync(_path, text);
         }
+        #endregion
     }
 }

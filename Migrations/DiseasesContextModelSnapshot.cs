@@ -99,14 +99,16 @@ namespace DataWarehouse.Migrations
                 {
                     b.HasOne("DataWarehouse.Models.Patient", null)
                         .WithMany("Diseases")
-                        .HasForeignKey("PatientId");
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("DataWarehouse.Models.DiseaseHospitalHistory", b =>
                 {
                     b.HasOne("DataWarehouse.Models.Disease", null)
                         .WithMany("DiseaseHospitalHistory")
-                        .HasForeignKey("DiseaseId");
+                        .HasForeignKey("DiseaseId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("DataWarehouse.Models.Disease", b =>

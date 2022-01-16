@@ -1,0 +1,52 @@
+--> Beginning benchmarks of sql operations on databases...
+
+******Pc specs: ******
+Processor  Name  AMD Ryzen 7 2700 Eight-Core Processor          
+Processor  NumberOfLogicalProcessors  16
+DiskDrive  Model  CT500MX500SSD1
+PhysicalMemory  Capacity  8589934592
+PhysicalMemory  Capacity  8589934592
+PhysicalMemory  Speed  3200
+PhysicalMemory  Speed  3200
+
+
+******Models used for testing: ******
+Model: Disease
+Id
+Name
+StartDate
+EndDate
+DiseaseHospitalHistory
+
+Model: DiseaseHospitalHistory
+Id
+HospitalName
+StayFrom
+StayTo
+Description
+
+Model: Patient
+Id
+FirstName
+LastName
+Age
+Address
+Diseases
+
+
+Inserting 1000 records to single table
+
+        INSERT INTO table_name (column1, column2, column3, ...)
+        VALUES (value1, value2, value3, ...)
+Running time: 1146
+Inserting 3 levels of data each consisting of 10 records, so 10*10*10 = 1000 records total
+
+        INSERT INTO table_name (column1, column2, column3, ...)
+        VALUES (value1, value2, value3, ...)
+Running time: 287
+Inserting 3 levels of data each consisting of 10 records, so 25*25*25 = 15 625 records total
+
+        INSERT INTO table_name (column1, column2, column3, ...)
+        VALUES (value1, value2, value3, ...)
+Running time: 3040
+

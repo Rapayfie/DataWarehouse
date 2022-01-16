@@ -1,18 +1,27 @@
-﻿using DataWarehouse.Databases.MongoDB;
+﻿using DataWarehouse.Databases.MSSQL;
 
 namespace DataWarehouse.Benchmarks.MSSQL
 {
-    public class SelectBenchmark
+    public class SelectBenchmark : Benchmark
     {
+        #region Constructor
         public SelectBenchmark()
         {
-            
+            PrepareDb();
         }
-        
+        #endregion
+
+        #region Implementation
         private void PrepareDb()
         {
-            MongoCRUD.DeleteAllRecords();
-            MongoCRUD.CreatePatients(15, true);
+            MSMSQLCRUD.DeleteAllRecords();
+            MSMSQLCRUD.CreatePatients(30, true);
         }
+
+        public void Bench()
+        {
+            MSMSQLCRUD.SelectAllPatients_WithDependencies_WhereDiseaseStartsWith_A_letter_OrderByPatientAddress();
+        }
+        #endregion
     }
 }

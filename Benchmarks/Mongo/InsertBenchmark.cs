@@ -1,5 +1,4 @@
-﻿using System;
-using DataWarehouse.Commons.Attributes;
+﻿using DataWarehouse.Commons.Attributes;
 using DataWarehouse.Databases.MongoDB;
 
 namespace DataWarehouse.Benchmarks.Mongo
@@ -30,6 +29,7 @@ namespace DataWarehouse.Benchmarks.Mongo
         {
             MongoCRUD.CreatePatients(25, true);
         }
+        
         #endregion
     }
 }

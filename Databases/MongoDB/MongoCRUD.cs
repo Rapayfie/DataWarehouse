@@ -29,9 +29,23 @@ namespace DataWarehouse.Databases.MongoDB
                 DataGenerator.GeneratePatients(count, includeChildElements));
         }
         
-        public static void SelectPatients()
+        public static void SelectAllPatients()
         {
-            var queryResult = PatientRepository.Query(
+            var result = PatientRepository.Query();
+        }
+        
+        public static void SelectAllPatientsWithDependencies()
+        {
+            var result = PatientRepository.Query(
+                include:
+                z => z
+                    .Include(x => x.Diseases)
+                    .ThenInclude(d => d.DiseaseHospitalHistory));
+        }
+        
+        public static void SelectAllPatients_WithDependencies_WhereDiseaseStartsWith_A_letter_OrderByPatientAddress()
+        {
+            var result = PatientRepository.Query(
                 filter:
                 x => 
                     x.Diseases.Any(y => y.Name.StartsWith("a")),
@@ -51,6 +65,5 @@ namespace DataWarehouse.Databases.MongoDB
             DiseaseHospitalHistoryRepository.DeleteAll();
         }
         #endregion
-        
     }
 }

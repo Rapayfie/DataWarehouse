@@ -28,7 +28,7 @@ namespace DataWarehouse.Databases.MongoDB
         public void InsertMany(IEnumerable<TDocument> records)
         {
             _collection.InsertMany(records);
-        } 
+        }
 
         public void DeleteAll()
         {
@@ -36,7 +36,7 @@ namespace DataWarehouse.Databases.MongoDB
             _collection.DeleteMany(filter);
         }
 
-        public ValueTask<IQueryable<TDocument>> Query(
+        public IQueryable<TDocument> Query(
             Expression<Func<TDocument, bool>> filter = null,
             int skip = 0,
             int take = int.MaxValue,
@@ -55,7 +55,12 @@ namespace DataWarehouse.Databases.MongoDB
                 resetSet = orderBy(resetSet).AsQueryable();
             }
             resetSet = skip == 0 ? resetSet.Take(take) : resetSet.Skip(skip).Take(take).AsQueryable();
-            return new ValueTask<IQueryable<TDocument>>(resetSet);
+            return resetSet;
+        }
+
+        public void ClearCache()
+        {
+            
         }
         #endregion
     }

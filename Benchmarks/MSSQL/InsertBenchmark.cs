@@ -30,6 +30,5 @@ namespace DataWarehouse.Benchmarks.MSSQL
             MSMSQLCRUD.CreatePatients(25, true);
         }
         #endregion
-        
     }
 }

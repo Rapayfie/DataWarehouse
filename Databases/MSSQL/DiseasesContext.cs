@@ -1,8 +1,5 @@
-﻿using System.Diagnostics;
-using DataWarehouse.Models;
+﻿using DataWarehouse.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
 
 namespace DataWarehouse.Databases.MSSQL
 {

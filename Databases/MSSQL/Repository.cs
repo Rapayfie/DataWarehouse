@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;  
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Query;
 
 namespace DataWarehouse.Databases.MSSQL
@@ -37,7 +36,7 @@ namespace DataWarehouse.Databases.MSSQL
             _context.SaveChanges();
         }
         
-        public ValueTask<IQueryable<TEntity>> Query(
+        public IQueryable<TEntity> Query(
             Expression<Func<TEntity, bool>> filter = null,
             int skip = 0,
             int take = int.MaxValue,
@@ -56,7 +55,7 @@ namespace DataWarehouse.Databases.MSSQL
                 resetSet = orderBy(resetSet).AsQueryable();
             }
             resetSet = skip == 0 ? resetSet.Take(take) : resetSet.Skip(skip).Take(take);
-            return new ValueTask<IQueryable<TEntity>>(resetSet);
+            return resetSet;
         }
         #endregion
     }

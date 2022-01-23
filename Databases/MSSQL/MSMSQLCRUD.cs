@@ -27,10 +27,38 @@ namespace DataWarehouse.Databases.MSSQL
         {
             PatientRepository.InsertMany(DataGenerator.GeneratePatients(count, includeChildElements));
         }
+        public static void SelectAllPatients()
+        {
+            var result = PatientRepository.Query();
+        }
+        
+        public static void SelectAllPatientsWhere()
+        {
+            var result = PatientRepository.Query(
+                filter:
+                x => x.Age > 20,
+                take: 2);
+        }
+        
+        public static void SelectAllPatientsWhere2()
+        {
+            var result = PatientRepository.Query(
+                filter:
+                x => x.Age > 20);
+        }
+        
+        public static void SelectAllPatientsWithDependencies()
+        {
+            var result = PatientRepository.Query(
+                include:
+                z => z
+                    .Include(x => x.Diseases)
+                    .ThenInclude(d => d.DiseaseHospitalHistory));
+        }
         
         public static void SelectAllPatients_WithDependencies_WhereDiseaseStartsWith_A_letter_OrderByPatientAddress()
         {
-            var queryResult = PatientRepository.Query(
+            var result = PatientRepository.Query(
                 filter:
                 x => 
                     x.Diseases.Any(y => y.Name.StartsWith("a")),

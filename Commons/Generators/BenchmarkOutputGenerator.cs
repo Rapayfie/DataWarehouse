@@ -42,27 +42,27 @@ namespace DataWarehouse.Commons.Generators
             File.Create(_path).Close();
         }
         
-        public static async Task WritePreprocessingInformation()
+        public static void WritePreprocessingInformation()
         {
-            await WriteBeginningDialog();
-            await WritePcSpecs();
-            await WriteModelsInfo();
+            WriteBeginningDialog();
+            WritePcSpecs();
+            WriteModelsInfo();
         }
 
-        public static async Task WriteInformation(string information)
+        public static void WriteInformation(string information)
         {
-            await using StreamWriter sw = File.AppendText(_path);
-            await sw.WriteLineAsync(information);
+            using var writer = new StreamWriter(_path, true);
+            writer.WriteLine(information);
         }
         
-        private static async Task WriteBeginningDialog()
+        private static void WriteBeginningDialog()
         {
             string text = @"--> Beginning benchmarks of sql operations on databases...";
-            
-            await File.WriteAllLinesAsync(_path, text.Split('\n'));
+            using var writer = new StreamWriter(_path, true);
+            writer.WriteLine(text);
         }
 
-        private static async Task WritePcSpecs()
+        private static void WritePcSpecs()
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine();
@@ -75,15 +75,13 @@ namespace DataWarehouse.Commons.Generators
                     var componentValues = GetComponent(entry.Key, value);
                     foreach (var component in componentValues)
                     {
-                        stringBuilder.AppendLine($"{entry.Key.ToString()}  {value.ToString()}  {component}");
+                        stringBuilder.AppendLine($"{entry.Key}  {value}  {component}");
                     }
                 }
             }
             stringBuilder.AppendLine();
-            using (StreamWriter sw = File.AppendText(_path))
-            {
-                await sw.WriteLineAsync(stringBuilder.ToString());
-            }
+            using var writer = new StreamWriter(_path, true);
+            writer.WriteLine(stringBuilder.ToString());
         }
 
         private static List<string> GetComponent(string hwclass, string syntax)
@@ -102,7 +100,7 @@ namespace DataWarehouse.Commons.Generators
             return list;
         }
         
-        private static async Task WriteModelsInfo()
+        private static void WriteModelsInfo()
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("******Models used for testing: ******");
@@ -123,11 +121,9 @@ namespace DataWarehouse.Commons.Generators
 
                 stringBuilder.AppendLine();
             }
-            
-            using (StreamWriter sw = File.AppendText(_path))
-            {
-                await sw.WriteLineAsync(stringBuilder.ToString());
-            }
+
+            using var writer = new StreamWriter(_path, true);
+            writer.WriteLine(stringBuilder.ToString());
         }
         
         public static async Task WritePostprocessingInformation()

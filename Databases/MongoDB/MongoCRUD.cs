@@ -32,7 +32,7 @@ namespace DataWarehouse.Databases.MongoDB
         public static void SelectAllPatients_WithoutDependencies_Where_AgeGreaterThan50_And_FirstNameStartsWithB()
         {
             var result = PatientRepository.Query(
-                    filter: p=> p.Age > 50 && p.FirstName.StartsWith("B"),
+                    filter: p=> p.Age > 50 && p.FirstName.StartsWith("B") && p.LastName.StartsWith("B"),
                     orderBy: p=> p.OrderBy(fn => fn.FirstName).ThenBy(ln => ln.LastName))
                 .ToList();
         }
@@ -41,7 +41,7 @@ namespace DataWarehouse.Databases.MongoDB
         {
             var result = PatientRepository.Query(
                     filter:
-                    p =>
+                    p => p.Age > 50 && p.FirstName.StartsWith("B") && p.LastName.StartsWith("B") &&
                         p.Diseases.Any(d => d.Name.StartsWith("A")
                                             && !d.EndDate.HasValue &&
                                             d.DiseaseHospitalHistory.Any(

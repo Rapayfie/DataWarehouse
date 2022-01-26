@@ -35,6 +35,7 @@ namespace DataWarehouse.Databases.MSSQL
                 filter: p=> p.Age > 50 && p.FirstName.StartsWith("B"),
                 orderBy: p=> p.OrderBy(fn => fn.FirstName).ThenBy(ln => ln.LastName))
                 .ToList();
+            var a = 3;
         }
 
         public static void SelectAllPatients_WithDependencies_Where_AnyDiseaseStartsWithAletter_AndHasNoEndValue_AndAnyDiseaseHospitalHistoryStartsWithALetter_OrderByPatientAddress()
@@ -59,8 +60,6 @@ namespace DataWarehouse.Databases.MSSQL
         public static void DeleteAllRecords()
         {
             PatientRepository.DeleteAll();
-            DiseaseRepository.DeleteAll();
-            DiseaseHospitalHistoryRepository.DeleteAll();
         }
         #endregion
     }

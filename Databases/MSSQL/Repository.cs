@@ -31,9 +31,13 @@ namespace DataWarehouse.Databases.MSSQL
         
         public void DeleteAll()
         {
-            var rows = _dbSet.Select(row => row);
-            _dbSet.RemoveRange(rows);
-            _context.SaveChanges();
+            var range = _dbSet.Count();
+            for (int i = 0; i < range; i += 1000)
+            {
+                var chunk =_context.Patients.Take(1000);
+                _context.RemoveRange(chunk);
+                _context.SaveChanges();
+            }
         }
         
         public IQueryable<TEntity> Query(

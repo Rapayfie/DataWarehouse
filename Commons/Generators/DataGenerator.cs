@@ -53,7 +53,7 @@ namespace DataWarehouse.Commons.Generators
                     Name = $"{RandomString()} {RandomString()}",
                     StartDate = RandomDate(),
                     EndDate = RandomEndDate(),
-                    DiseaseHospitalHistory = GenerateDiseaseHistory(count)
+                    DiseaseHospitalHistory = GenerateDiseaseHistory(5)
                 });
             }
 
@@ -72,7 +72,7 @@ namespace DataWarehouse.Commons.Generators
                     LastName = $"{RandomString()} {RandomString()}",
                     Address = $"{RandomString()} {Gen.Next(0, 500)}",
                     Age = Gen.Next(0, 100),
-                    Diseases = includeChildElements ? GenerateDisease(count) : null
+                    Diseases = includeChildElements ? GenerateDisease(5) : null
                 });
             }
 

@@ -7,9 +7,9 @@ namespace DataWarehouse.Benchmarks.MSSQL
     {
         #region Implementation
         [Benchmark(
-            Description="Inserting 1000 records to single table",
+            Description="Inserting records",
             SqlEquivalentStatement = SqlStatementsDescriptions.Insert,
-            Values = new []{10, 20, 30, 40, 50, 60, 100, 150})]
+            Values = new []{200, 500, 1000, 2000, 3000, 4000, 5000})]
         public void BenchmarkInsert(int numberOfRecords)
         {
             MSMSQLCRUD.CreatePatients(numberOfRecords, true);

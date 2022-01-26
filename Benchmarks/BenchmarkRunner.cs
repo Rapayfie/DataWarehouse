@@ -38,13 +38,13 @@ namespace DataWarehouse.Benchmarks
                             PrepareData<T>(classInstance, value);
                             var timeElapsed = GetRunningTimeOfMethod(method, classInstance);
                             stringBuilder.AppendLine(
-                                $"Number of records {value}^3: {Math.Pow(value, 3)}, Running time: {timeElapsed}");
+                                $"Number of records {value}*5*5: {value*5*5}, Running time: {timeElapsed} ms");
                         }
                         else
                         {
                             var timeElapsed = GetRunningTimeOfInsertMethod(method, classInstance, value);
                             stringBuilder.AppendLine(
-                                $"Number of records {value}^3: {Math.Pow(value, 3)}, Running time: {timeElapsed}");
+                                $"Number of records {value}*5*5: {value*5*5}, Running time: {timeElapsed} ms");
                         }
                     }
                     stringBuilder.AppendLine();

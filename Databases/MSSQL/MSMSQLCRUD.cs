@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using DataWarehouse.Commons.Generators;
 using DataWarehouse.Models;
 using Microsoft.EntityFrameworkCore;
@@ -29,46 +31,29 @@ namespace DataWarehouse.Databases.MSSQL
         }
         public static void SelectAllPatients()
         {
-            var result = PatientRepository.Query();
+            var result = PatientRepository.Query(
+                filter: p=> p.Age > 50 && p.FirstName.StartsWith("B"),
+                orderBy: p=> p.OrderBy(fn => fn.FirstName).ThenBy(ln => ln.LastName))
+                .ToList();
         }
-        
-        public static void SelectAllPatientsWhere()
+
+        public static void SelectAllPatients_WithDependencies_Where_AnyDiseaseStartsWithAletter_AndHasNoEndValue_AndAnyDiseaseHospitalHistoryStartsWithALetter_OrderByPatientAddress()
         {
             var result = PatientRepository.Query(
                 filter:
-                x => x.Age > 20,
-                take: 2);
-        }
-        
-        public static void SelectAllPatientsWhere2()
-        {
-            var result = PatientRepository.Query(
-                filter:
-                x => x.Age > 20);
-        }
-        
-        public static void SelectAllPatientsWithDependencies()
-        {
-            var result = PatientRepository.Query(
-                include:
-                z => z
-                    .Include(x => x.Diseases)
-                    .ThenInclude(d => d.DiseaseHospitalHistory));
-        }
-        
-        public static void SelectAllPatients_WithDependencies_WhereDiseaseStartsWith_A_letter_OrderByPatientAddress()
-        {
-            var result = PatientRepository.Query(
-                filter:
-                x => 
-                    x.Diseases.Any(y => y.Name.StartsWith("a")),
+                p =>
+                    p.Diseases.Any(d => d.Name.StartsWith("A")
+                                        && !d.EndDate.HasValue &&
+                                        d.DiseaseHospitalHistory.Any(
+                                            dh => dh.Description.StartsWith("A"))),
                 orderBy:
-                a => a
-                    .OrderBy(b => b.Address),
+                p => p
+                    .OrderBy(fn => fn.FirstName).ThenBy(ln => ln.LastName),
                 include:
                 z => z
-                    .Include(x => x.Diseases)
-                    .ThenInclude(d => d.DiseaseHospitalHistory));
+                    .Include(d => d.Diseases)
+                    .ThenInclude(dh => dh.DiseaseHospitalHistory))
+                .ToList();
         }
         
         public static void DeleteAllRecords()

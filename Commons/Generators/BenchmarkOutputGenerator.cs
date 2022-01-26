@@ -38,7 +38,7 @@ namespace DataWarehouse.Commons.Generators
         private static void CreateFileWithCurrentDate()
         {
             _fileName = $"Benchmark_{DateTime.Now:yyyyMMdd_hhmmss}";
-            _path = System.IO.Path.Combine(DirectoryName, _fileName);
+            _path = Path.Combine(DirectoryName, _fileName);
             File.Create(_path).Close();
         }
         

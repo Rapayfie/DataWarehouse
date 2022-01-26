@@ -7,13 +7,16 @@ namespace DataWarehouse.Commons.Attributes
     {
         public BenchmarkAttribute(
             string description = null,
-            string sqlEquivalentStatement = null)
+            string sqlEquivalentStatement = null,
+            params int[] values)
         {
             Description = description;
             SqlEquivalentStatement = sqlEquivalentStatement;
+            Values = values;
         }
         
         public string Description { get; set; }
         public string SqlEquivalentStatement { get; set; }
+        public int[] Values { get; set; }
     }
 }

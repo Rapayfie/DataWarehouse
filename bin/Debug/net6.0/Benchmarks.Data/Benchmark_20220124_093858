@@ -34,27 +34,21 @@ Address
 Diseases
 
 
---> Benchmark for: DataWarehouse.Benchmarks.MSSQL.SelectBenchmark
-Selecting all records in Patients with dependencies this is Diseases and DiseaseHospitalHistories tableswhere disease starts with a letter and result is returned by patient address order ascending
-SELECT [t].[Id], [t].[Address], [t].[Age], [t].[FirstName], [t].[LastName], [t0].[Id], [t0].[EndDate], [t0].[Name], [t0].[PatientId], [t0].[StartDate], [t0].[Id0], [t0].[Description], [t0].[DiseaseId], [t0].[HospitalName], [t0].[StayFrom], [t0].[StayTo]
-FROM (
-    SELECT TOP(@__p_0) [p].[Id], [p].[Address], [p].[Age], [p].[FirstName], [p].[LastName]
-    FROM [Patients] AS [p]
-    WHERE EXISTS (
-        SELECT 1
-        FROM [Diseases] AS [d]
-        WHERE ([p].[Id] = [d].[PatientId]) AND ([d].[Name] IS NOT NULL AND ([d].[Name] LIKE N'a%')))
-    ORDER BY [p].[Address]
-) AS [t]
-LEFT JOIN (
-    SELECT [d0].[Id], [d0].[EndDate], [d0].[Name], [d0].[PatientId], [d0].[StartDate], [d1].[Id] AS [Id0], [d1].[Description], [d1].[DiseaseId], [d1].[HospitalName], [d1].[StayFrom], [d1].[StayTo]
-    FROM [Diseases] AS [d0]
-    LEFT JOIN [DiseaseHospitalHistories] AS [d1] ON [d0].[Id] = [d1].[DiseaseId]
-) AS [t0] ON [t].[Id] = [t0].[PatientId]
-ORDER BY [t].[Address], [t].[Id], [t0].[Id], [t0].[Id0]
-Running time: 925
+--> Benchmark for: DataWarehouse.Benchmarks.Mongo.SelectBenchmark
+Selecting all records in Patients
+
+DECLARE @__p_0 int = 2147483647;
+
+SELECT TOP(@__p_0) [p].[Id], [p].[Address], [p].[Age], [p].[FirstName], [p].[LastName]
+FROM [Patients] AS [p]
+Number of records 10^3: 1000, Running time: 69
+Number of records 20^3: 8000, Running time: 58
+Number of records 30^3: 27000, Running time: 199
 
 Selecting all records in Patients with dependencies this is Diseases and DiseaseHospitalHistories tableswhere disease starts with a letter and result is returned by patient address order ascending
+
+DECLARE @__p_0 int = 2147483647;
+
 SELECT [t].[Id], [t].[Address], [t].[Age], [t].[FirstName], [t].[LastName], [t0].[Id], [t0].[EndDate], [t0].[Name], [t0].[PatientId], [t0].[StartDate], [t0].[Id0], [t0].[Description], [t0].[DiseaseId], [t0].[HospitalName], [t0].[StayFrom], [t0].[StayTo]
 FROM (
     SELECT TOP(@__p_0) [p].[Id], [p].[Address], [p].[Age], [p].[FirstName], [p].[LastName]
@@ -71,6 +65,44 @@ LEFT JOIN (
     LEFT JOIN [DiseaseHospitalHistories] AS [d1] ON [d0].[Id] = [d1].[DiseaseId]
 ) AS [t0] ON [t].[Id] = [t0].[PatientId]
 ORDER BY [t].[Address], [t].[Id], [t0].[Id], [t0].[Id0]
-Running time: 0
+Number of records 10^3: 1000, Running time: 28
+Number of records 20^3: 8000, Running time: 16
+Number of records 30^3: 27000, Running time: 66
+
+
+--> Benchmark for: DataWarehouse.Benchmarks.MSSQL.SelectBenchmark
+Selecting all records in Patients
+
+DECLARE @__p_0 int = 2147483647;
+
+SELECT TOP(@__p_0) [p].[Id], [p].[Address], [p].[Age], [p].[FirstName], [p].[LastName]
+FROM [Patients] AS [p]
+Number of records 10^3: 1000, Running time: 26
+Number of records 20^3: 8000, Running time: 0
+Number of records 30^3: 27000, Running time: 0
+
+Selecting all records in Patients with dependencies this is Diseases and DiseaseHospitalHistories tableswhere disease starts with a letter and result is returned by patient address order ascending
+
+DECLARE @__p_0 int = 2147483647;
+
+SELECT [t].[Id], [t].[Address], [t].[Age], [t].[FirstName], [t].[LastName], [t0].[Id], [t0].[EndDate], [t0].[Name], [t0].[PatientId], [t0].[StartDate], [t0].[Id0], [t0].[Description], [t0].[DiseaseId], [t0].[HospitalName], [t0].[StayFrom], [t0].[StayTo]
+FROM (
+    SELECT TOP(@__p_0) [p].[Id], [p].[Address], [p].[Age], [p].[FirstName], [p].[LastName]
+    FROM [Patients] AS [p]
+    WHERE EXISTS (
+        SELECT 1
+        FROM [Diseases] AS [d]
+        WHERE ([p].[Id] = [d].[PatientId]) AND ([d].[Name] IS NOT NULL AND ([d].[Name] LIKE N'a%')))
+    ORDER BY [p].[Address]
+) AS [t]
+LEFT JOIN (
+    SELECT [d0].[Id], [d0].[EndDate], [d0].[Name], [d0].[PatientId], [d0].[StartDate], [d1].[Id] AS [Id0], [d1].[Description], [d1].[DiseaseId], [d1].[HospitalName], [d1].[StayFrom], [d1].[StayTo]
+    FROM [Diseases] AS [d0]
+    LEFT JOIN [DiseaseHospitalHistories] AS [d1] ON [d0].[Id] = [d1].[DiseaseId]
+) AS [t0] ON [t].[Id] = [t0].[PatientId]
+ORDER BY [t].[Address], [t].[Id], [t0].[Id], [t0].[Id0]
+Number of records 10^3: 1000, Running time: 146
+Number of records 20^3: 8000, Running time: 108
+Number of records 30^3: 27000, Running time: 396
 
 

@@ -12,6 +12,7 @@ namespace DataWarehouse.Databases.MongoDB
     {
         #region Fields
         private readonly IMongoCollection<TDocument> _collection;
+        private readonly IMongoDatabase _db;
         #endregion
 
         #region Constructor
@@ -19,8 +20,8 @@ namespace DataWarehouse.Databases.MongoDB
         {
             var database = "DiseaseDB";
             var client = new MongoClient();
-            var db = client.GetDatabase(database);
-            _collection = db.GetCollection<TDocument>(table);
+            _db = client.GetDatabase(database);
+            _collection = _db.GetCollection<TDocument>(table);
         }
         #endregion
 
@@ -36,7 +37,7 @@ namespace DataWarehouse.Databases.MongoDB
             _collection.DeleteMany(filter);
         }
 
-        public IQueryable<TDocument> Query(
+        public IEnumerable<TDocument> Query(
             Expression<Func<TDocument, bool>> filter = null,
             int skip = 0,
             int take = int.MaxValue,
@@ -54,13 +55,8 @@ namespace DataWarehouse.Databases.MongoDB
             {
                 resetSet = orderBy(resetSet).AsQueryable();
             }
-            resetSet = skip == 0 ? resetSet.Take(take) : resetSet.Skip(skip).Take(take).AsQueryable();
-            return resetSet;
-        }
-
-        public void ClearCache()
-        {
-            
+            resetSet = skip == 0 ? resetSet.Take(take) : resetSet.Skip(skip).Take(take);
+            return resetSet.AsEnumerable();
         }
         #endregion
     }

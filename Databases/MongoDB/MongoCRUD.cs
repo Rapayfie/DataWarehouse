@@ -29,33 +29,31 @@ namespace DataWarehouse.Databases.MongoDB
                 DataGenerator.GeneratePatients(count, includeChildElements));
         }
         
-        public static void SelectAllPatients()
-        {
-            var result = PatientRepository.Query();
-        }
-        
-        public static void SelectAllPatientsWithDependencies()
+        public static void SelectAllPatients_WithoutDependencies_Where_AgeGreaterThan50_And_FirstNameStartsWithB()
         {
             var result = PatientRepository.Query(
-                include:
-                z => z
-                    .Include(x => x.Diseases)
-                    .ThenInclude(d => d.DiseaseHospitalHistory));
+                    filter: p=> p.Age > 50 && p.FirstName.StartsWith("B"),
+                    orderBy: p=> p.OrderBy(fn => fn.FirstName).ThenBy(ln => ln.LastName))
+                .ToList();
         }
-        
-        public static void SelectAllPatients_WithDependencies_WhereDiseaseStartsWith_A_letter_OrderByPatientAddress()
+
+        public static void SelectAllPatients_WithDependencies_Where_AnyDiseaseStartsWithAletter_AndHasNoEndValue_AndAnyDiseaseHospitalHistoryStartsWithALetter_OrderByPatientAddress()
         {
             var result = PatientRepository.Query(
-                filter:
-                x => 
-                    x.Diseases.Any(y => y.Name.StartsWith("a")),
-                orderBy:
-                a => a
-                    .OrderBy(b => b.Address),
-                include:
-                z => z
-                    .Include(x => x.Diseases)
-                    .ThenInclude(d => d.DiseaseHospitalHistory));
+                    filter:
+                    p =>
+                        p.Diseases.Any(d => d.Name.StartsWith("A")
+                                            && !d.EndDate.HasValue &&
+                                            d.DiseaseHospitalHistory.Any(
+                                                dh => dh.Description.StartsWith("A"))),
+                    orderBy:
+                    p => p
+                        .OrderBy(fn => fn.FirstName).ThenBy(ln => ln.LastName),
+                    include:
+                    z => z
+                        .Include(d => d.Diseases)
+                        .ThenInclude(dh => dh.DiseaseHospitalHistory))
+                .ToList();
         }
         
         public static void DeleteAllRecords()

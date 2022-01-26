@@ -20,33 +20,38 @@ namespace DataWarehouse.Benchmarks
         public static void Run<T>() where T : Benchmark
         {
             var classType = typeof(T);
-            var methodInfos = GetMethods(classType);
-            object classInstance = Activator.CreateInstance(typeof(T), null);
+            object classInstance = Activator.CreateInstance(classType, null);
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine($"--> Benchmark for: {classType.Namespace}.{classType.Name}");
-            
-            foreach (var methodInfo in methodInfos)
+
+            foreach (MethodInfo method in typeof(T).GetMethods())
             {
-                var a = typeof(T).Namespace;
-                GetBenchmarkAttributeDescriptions(ref stringBuilder, methodInfo);
-                var timeElapsed = GetRunningTimeOfMethod(methodInfo, classInstance);
-                stringBuilder.AppendLine($"Running time: {timeElapsed}");
-                stringBuilder.AppendLine();
+                var attribute = method.GetCustomAttribute<BenchmarkAttribute>();
+                if (attribute != null)
+                {
+                    stringBuilder.AppendLine(attribute.Description);
+                    stringBuilder.AppendLine(attribute.SqlEquivalentStatement);
+                    foreach (var value in attribute.Values)
+                    {
+                        if (classType.Name.StartsWith("S"))
+                        {
+                            PrepareData<T>(classInstance, value);
+                            var timeElapsed = GetRunningTimeOfMethod(method, classInstance);
+                            stringBuilder.AppendLine(
+                                $"Number of records {value}^3: {Math.Pow(value, 3)}, Running time: {timeElapsed}");
+                        }
+                        else
+                        {
+                            var timeElapsed = GetRunningTimeOfInsertMethod(method, classInstance, value);
+                            stringBuilder.AppendLine(
+                                $"Number of records {value}^3: {Math.Pow(value, 3)}, Running time: {timeElapsed}");
+                        }
+                    }
+                    stringBuilder.AppendLine();
+                }
             }
 
             BenchmarkOutputGenerator.WriteInformation(stringBuilder.ToString());
-        }
-
-        private static MethodInfo[] GetMethods(Type type)
-        {
-            return type.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
-        }
-
-        private static void GetBenchmarkAttributeDescriptions(ref StringBuilder stringBuilder, MethodInfo methodInfo)
-        {
-            var attribute = methodInfo.GetCustomAttribute<BenchmarkAttribute>();
-            stringBuilder.AppendLine(attribute.Description);
-            stringBuilder.AppendLine(attribute.SqlEquivalentStatement);
         }
 
         private static long GetRunningTimeOfMethod(MethodInfo methodInfo, object classInstance)
@@ -57,6 +62,22 @@ namespace DataWarehouse.Benchmarks
             
             return watch.ElapsedMilliseconds;
         }
+
+        private static long GetRunningTimeOfInsertMethod(MethodInfo methodInfo, object classInstance, int numberOfRecords)
+        {
+            var watch = Stopwatch.StartNew();
+            methodInfo.Invoke(classInstance, new object[]{numberOfRecords});
+            watch.Stop();
+            
+            return watch.ElapsedMilliseconds;
+        }
+        
+        private static void PrepareData<T>(object classInstance, int numberOfRecords)
+        {
+            MethodInfo methodInfo = typeof(T).GetMethod("PrepareDb");
+            methodInfo.Invoke(classInstance, new object[]{numberOfRecords});
+        }
+        
         #endregion
     }
 }
